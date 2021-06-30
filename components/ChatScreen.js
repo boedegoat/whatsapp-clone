@@ -63,8 +63,8 @@ const ChatScreen = ({ chat, messages, onMobile }) => {
   }
 
   useEffect(() => {
-    scrollToBottom()
-  }, [])
+    scrollToBottom('smooth')
+  }, [messagesSnapshot])
 
   function sendMessage(e) {
     e.preventDefault()
@@ -85,7 +85,6 @@ const ChatScreen = ({ chat, messages, onMobile }) => {
     })
 
     setInput('')
-    scrollToBottom('smooth')
   }
 
   const recipient = recipientSnapshot?.docs?.[0]?.data()
