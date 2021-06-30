@@ -11,7 +11,6 @@ function MyApp({ Component, pageProps }) {
 
   useEffect(() => {
     if (user) {
-      alert('user logged in')
       db.collection('users').doc(user.uid).set(
         {
           email: user.email,

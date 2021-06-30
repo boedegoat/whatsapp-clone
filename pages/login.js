@@ -2,6 +2,7 @@ import styled from 'styled-components'
 import Head from 'next/head'
 import { Button } from '@material-ui/core'
 import { auth, provider } from '../firebase'
+import Image from 'next/image'
 
 const Login = () => {
   function signIn() {
@@ -15,7 +16,10 @@ const Login = () => {
       </Head>
 
       <LogoContainer>
-        <Logo src='https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/WhatsApp.svg/1200px-WhatsApp.svg.png' />
+        <Logo
+          src='https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/WhatsApp.svg/1200px-WhatsApp.svg.png'
+          alt='logo'
+        />
         <Button variant='outlined' onClick={signIn}>
           Sign In with Google
         </Button>
@@ -43,7 +47,7 @@ const LogoContainer = styled.div`
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
 `
 
-const Logo = styled.img`
+const Logo = styled(Image)`
   width: 200px;
   height: 200px;
   margin-bottom: 1rem;
