@@ -63,6 +63,7 @@ export default Sidebar
 
 const Container = styled.div`
   border-right: 1px solid whitesmoke;
+  height: 100vh;
   min-width: 300px;
   max-width: 350px;
   overflow-y: scroll;

@@ -151,8 +151,9 @@ export default ChatScreen
 const Container = styled.div``
 
 const Header = styled.div`
-  position: sticky;
+  position: fixed;
   top: 0;
+  width: 100%;
   height: 80px;
   background: white;
   z-index: 100;
@@ -202,8 +203,9 @@ const InputContainer = styled.form`
   display: flex;
   align-items: center;
   padding: 10px;
-  position: sticky;
+  position: fixed;
   bottom: 0;
+  width: 100%;
   background: white;
   z-index: 100;
 `
