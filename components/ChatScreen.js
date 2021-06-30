@@ -204,7 +204,7 @@ const InputContainer = styled.form`
   display: flex;
   align-items: center;
   padding: 10px;
-  position: fixed;
+  position: sticky;
   bottom: 0;
   width: 100%;
   background: white;
