@@ -117,14 +117,20 @@ const ChatScreen = ({ chat, messages, onMobile }) => {
           )}
         </HeaderInformation>
         <HeaderIcons>
-          {!onMobile && (
+          {onMobile ? (
             <IconButton>
-              <AttachFileIcon />
+              <MoreVertIcon />
             </IconButton>
+          ) : (
+            <>
+              <IconButton>
+                <MoreVertIcon />
+              </IconButton>
+              <IconButton>
+                <AttachFileIcon />
+              </IconButton>
+            </>
           )}
-          <IconButton>
-            <MoreVertIcon />
-          </IconButton>
         </HeaderIcons>
       </Header>
 
@@ -147,12 +153,14 @@ const ChatScreen = ({ chat, messages, onMobile }) => {
 
 export default ChatScreen
 
-const Container = styled.div``
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+`
 
 const Header = styled.div`
-  position: fixed;
-  top: 0;
-  width: 100%;
   height: 80px;
   background: white;
   z-index: 100;
@@ -164,7 +172,6 @@ const Header = styled.div`
 
 const HeaderInformation = styled.div`
   margin-left: 15px;
-  flex: 1;
 
   > h3 {
     margin: 0;
@@ -186,26 +193,32 @@ const HeaderInformation = styled.div`
   }
 `
 
-const HeaderIcons = styled.div``
+const HeaderIcons = styled.div`
+  margin-left: auto;
+`
 
 const MessageContainer = styled.div`
-  margin-top: 80px;
   padding: 30px;
   background: #e5ded8;
-  min-height: 90vh;
+  overflow-y: scroll;
+  flex: 1;
+
+  ::-webkit-scrollbar {
+    display: none;
+  }
+
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 `
 
 const EndOfMessage = styled.div`
-  margin-bottom: 52px;
+  /* margin-bottom: 52px; */
 `
 
 const InputContainer = styled.form`
   display: flex;
   align-items: center;
   padding: 10px;
-  position: sticky;
-  bottom: 0;
-  width: 100%;
   background: white;
   z-index: 100;
 `
