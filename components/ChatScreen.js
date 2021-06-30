@@ -168,6 +168,13 @@ const Header = styled.div`
   padding: 11px;
   align-items: center;
   border-bottom: 1px solid whitesmoke;
+
+  @media (max-width: 500px) {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+  }
 `
 
 const HeaderInformation = styled.div`
@@ -209,6 +216,10 @@ const MessageContainer = styled.div`
 
   -ms-overflow-style: none;
   scrollbar-width: none;
+
+  @media (max-width: 500px) {
+    margin: 80px 0 70px;
+  }
 `
 
 const EndOfMessage = styled.div`
@@ -221,6 +232,13 @@ const InputContainer = styled.form`
   padding: 10px;
   background: white;
   z-index: 100;
+
+  @media (max-width: 500px) {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+  }
 `
 
 const Input = styled.input`
