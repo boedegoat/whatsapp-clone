@@ -13,8 +13,10 @@ import { useState, useRef, useEffect } from 'react'
 import getRecipientEmail from '../utils/getRecipientEmail'
 import Message from '../components/Message'
 import TimeAgo from 'timeago-react'
+import Link from 'next/link'
+import KeyboardBackspaceIcon from '@material-ui/icons/KeyboardBackspace'
 
-const ChatScreen = ({ chat, messages }) => {
+const ChatScreen = ({ chat, messages, onMobile }) => {
   const [user] = useAuthState(auth)
   const router = useRouter()
   const endOfMessageRef = useRef()
@@ -92,6 +94,13 @@ const ChatScreen = ({ chat, messages }) => {
   return (
     <Container>
       <Header>
+        {onMobile && (
+          <Link href='/'>
+            <IconButton>
+              <KeyboardBackspaceIcon />
+            </IconButton>
+          </Link>
+        )}
         {recipient ? <Avatar src={recipient?.photoURL} /> : <Avatar>{recipientEmail[0]}</Avatar>}
         <HeaderInformation>
           <h3>{recipientEmail}</h3>
@@ -109,9 +118,11 @@ const ChatScreen = ({ chat, messages }) => {
           )}
         </HeaderInformation>
         <HeaderIcons>
-          <IconButton>
-            <AttachFileIcon />
-          </IconButton>
+          {!onMobile && (
+            <IconButton>
+              <AttachFileIcon />
+            </IconButton>
+          )}
           <IconButton>
             <MoreVertIcon />
           </IconButton>
@@ -158,12 +169,20 @@ const HeaderInformation = styled.div`
   > h3 {
     margin: 0;
     margin-bottom: 3px;
+
+    @media (max-width: 500px) {
+      font-size: clamp(13px, 3vw, 16px);
+    }
   }
 
   > p {
     margin: 0;
     font-size: 14px;
     color: gray;
+
+    @media (max-width: 500px) {
+      font-size: clamp(12px, 2.5vw, 14px);
+    }
   }
 `
 

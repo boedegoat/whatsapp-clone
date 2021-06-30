@@ -5,6 +5,7 @@ import ChatScreen from '../../components/ChatScreen'
 import { auth, db } from '../../firebase'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import getRecipientEmail from '../../utils/getRecipientEmail'
+import { useEffect, useState } from 'react'
 
 export async function getServerSideProps(context) {
   const ref = db.collection('chats').doc(context.query.id)
@@ -43,15 +44,33 @@ export async function getServerSideProps(context) {
 
 const Chat = ({ chat, messages }) => {
   const [user] = useAuthState(auth)
+  const [onMobile, setOnMobile] = useState(false)
+
+  function handleWindowSize() {
+    const windowWidth = window.innerWidth
+    if (windowWidth <= 500) {
+      setOnMobile(true)
+    } else {
+      setOnMobile(false)
+    }
+  }
+
+  useEffect(() => {
+    handleWindowSize()
+    window.addEventListener('resize', handleWindowSize)
+    return () => {
+      window.removeEventListener('resize', handleWindowSize)
+    }
+  }, [])
 
   return (
     <Container>
       <Head>
         <title>Chat with {getRecipientEmail(chat.users, user)}</title>
       </Head>
-      <Sidebar />
+      {!onMobile && <Sidebar />}
       <ChatContainer>
-        <ChatScreen chat={chat} messages={messages} />
+        <ChatScreen chat={chat} messages={messages} onMobile={onMobile} />
       </ChatContainer>
     </Container>
   )
