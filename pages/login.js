@@ -3,11 +3,19 @@ import Head from 'next/head'
 import { Button } from '@material-ui/core'
 import { auth, provider } from '../firebase'
 import Image from 'next/image'
+import { useEffect } from 'react'
+import { useRouter } from 'next/router'
 
 const Login = () => {
+  const router = useRouter()
+
   function signIn() {
     auth.signInWithPopup(provider).catch(alert)
   }
+
+  useEffect(() => {
+    router.push('/login')
+  }, [])
 
   return (
     <Container>

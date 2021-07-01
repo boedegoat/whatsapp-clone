@@ -102,7 +102,7 @@ const ChatScreen = ({ chat, messages, onMobile }) => {
         )}
         {recipient ? <Avatar src={recipient?.photoURL} /> : <Avatar>{recipientEmail[0]}</Avatar>}
         <HeaderInformation>
-          <h3>{recipientEmail}</h3>
+          <h3>{recipient?.displayName || recipientEmail}</h3>
           {recipientSnapshot ? (
             <p>
               Last active:{' '}

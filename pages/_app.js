@@ -9,13 +9,13 @@ import { useRouter } from 'next/router'
 import nProgress from 'nprogress'
 import 'nprogress/nprogress.css'
 
-nProgress.configure({ showSpinner: false })
-
 function MyApp({ Component, pageProps }) {
   const [user, loading] = useAuthState(auth)
   const router = useRouter()
 
   useEffect(() => {
+    nProgress.configure({ showSpinner: false })
+
     function handleStart(url) {
       console.log(`loading : ${url}`)
       nProgress.start()
@@ -38,9 +38,11 @@ function MyApp({ Component, pageProps }) {
 
   useEffect(() => {
     if (user) {
+      router.push('/')
       db.collection('users').doc(user.uid).set(
         {
           email: user.email,
+          displayName: user.displayName,
           lastSeen: firebase.firestore.FieldValue.serverTimestamp(),
           photoURL: user.photoURL,
         },

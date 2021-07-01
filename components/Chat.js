@@ -26,7 +26,11 @@ const Chat = ({ id, users }) => {
       ) : (
         <UserAvatar>{recipientEmail[0]}</UserAvatar>
       )}
-      <p>{recipientEmail}</p>
+      <div>
+        <b>{recipient?.displayName || recipientEmail}</b>
+        <br />
+        {recipient?.displayName && <small>{recipientEmail}</small>}
+      </div>
     </Container>
   )
 }
