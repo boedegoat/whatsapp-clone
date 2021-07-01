@@ -5,9 +5,36 @@ import Login from './login'
 import Loading from '../components/Loading'
 import { useEffect } from 'react'
 import firebase from 'firebase'
+import { useRouter } from 'next/router'
+import nProgress from 'nprogress'
+import 'nprogress/nprogress.css'
+
+nProgress.configure({ showSpinner: false })
 
 function MyApp({ Component, pageProps }) {
   const [user, loading] = useAuthState(auth)
+  const router = useRouter()
+
+  useEffect(() => {
+    function handleStart(url) {
+      console.log(`loading : ${url}`)
+      nProgress.start()
+    }
+
+    function handleStop(url) {
+      nProgress.done()
+    }
+
+    router.events.on('routeChangeStart', handleStart)
+    router.events.on('routeChangeComplete', handleStop)
+    router.events.on('routeChangeError', handleStop)
+
+    return () => {
+      router.events.off('routeChangeStart', handleStart)
+      router.events.off('routeChangeComplete', handleStop)
+      router.events.off('routeChangeError', handleStop)
+    }
+  }, [router])
 
   useEffect(() => {
     if (user) {
