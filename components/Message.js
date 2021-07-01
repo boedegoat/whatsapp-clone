@@ -2,17 +2,20 @@ import styled from 'styled-components'
 import { auth } from '../firebase'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import moment from 'moment'
+import DoneAllIcon from '@material-ui/icons/DoneAll'
 
 const Message = ({ user, message }) => {
   const [userLoggedIn] = useAuthState(auth)
 
-  const TypeOfMessage = user === userLoggedIn.email ? Sender : Receiver
+  const isSender = user === userLoggedIn.email
+  const TypeOfMessage = isSender ? Sender : Receiver
 
   return (
     <Container>
       <TypeOfMessage>
         {message.message}
         <Timestamp>{message.timestamp ? moment(message.timestamp).format('LT') : '...'}</Timestamp>
+        {isSender && message.isRead && <ReadIcon />}
       </TypeOfMessage>
     </Container>
   )
@@ -51,4 +54,11 @@ const Timestamp = styled.span`
   bottom: 0;
   right: 0;
   text-align: right;
+`
+
+const ReadIcon = styled(DoneAllIcon)`
+  position: absolute;
+  bottom: -10px;
+  right: -5px;
+  color: #1e76e8;
 `

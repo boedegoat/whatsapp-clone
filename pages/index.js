@@ -1,7 +1,17 @@
 import Head from 'next/head'
 import Sidebar from '../components/Sidebar'
+import { useEffect } from 'react'
+import { db, auth } from '../firebase'
+import { useAuthState } from 'react-firebase-hooks/auth'
 
 export default function Home() {
+  const [user] = useAuthState(auth)
+  const userRef = db.collection('users').doc(user.uid)
+
+  useEffect(() => {
+    userRef.set({ chatWith: '' }, { merge: true })
+  }, [])
+
   return (
     <div>
       <Head>

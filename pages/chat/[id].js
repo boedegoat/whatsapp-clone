@@ -2,6 +2,7 @@ import styled from 'styled-components'
 import Head from 'next/head'
 import Sidebar from '../../components/Sidebar'
 import ChatScreen from '../../components/ChatScreen'
+import firebase from 'firebase/app'
 import { auth, db } from '../../firebase'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import getRecipientEmail from '../../utils/getRecipientEmail'
@@ -45,6 +46,33 @@ export async function getServerSideProps(context) {
 const Chat = ({ chat, messages }) => {
   const [user] = useAuthState(auth)
   const [onMobile, setOnMobile] = useState(false)
+  const userRef = db.collection('users').doc(user.uid)
+  const recipientEmail = getRecipientEmail(chat.users, user)
+
+  useEffect(() => {
+    function handleVisibility() {
+      if (document.visibilityState === 'hidden') {
+        userRef.set({ chatWith: '' }, { merge: true })
+      } else {
+        userRef.set(
+          {
+            chatWith: recipientEmail,
+            lastSeen: firebase.firestore.FieldValue.serverTimestamp(),
+          },
+          { merge: true }
+        )
+      }
+    }
+
+    document.addEventListener('visibilitychange', handleVisibility)
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibility)
+    }
+  }, [])
+
+  useEffect(() => {
+    userRef.set({ chatWith: recipientEmail }, { merge: true })
+  }, [recipientEmail])
 
   function handleWindowSize() {
     const windowWidth = window.innerWidth
@@ -66,7 +94,7 @@ const Chat = ({ chat, messages }) => {
   return (
     <Container>
       <Head>
-        <title>Chat with {getRecipientEmail(chat.users, user)}</title>
+        <title>Chat with {recipientEmail}</title>
       </Head>
       {!onMobile && <Sidebar />}
       <ChatContainer>

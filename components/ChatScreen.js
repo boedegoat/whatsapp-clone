@@ -20,19 +20,24 @@ const ChatScreen = ({ chat, messages, onMobile }) => {
   const [user] = useAuthState(auth)
   const router = useRouter()
   const endOfMessageRef = useRef()
-
-  // prettier-ignore
-  const [messagesSnapshot] = useCollection(
-    db
-      .collection('chats')
-      .doc(router.query.id)
-      .collection('messages')
-      .orderBy('timestamp', 'asc')
-  )
+  const messagesRef = db.collection('chats').doc(router.query.id).collection('messages')
+  const [messagesSnapshot] = useCollection(messagesRef.orderBy('timestamp', 'asc'))
 
   const [recipientSnapshot] = useCollection(
     db.collection('users').where('email', '==', getRecipientEmail(chat.users, user))
   )
+
+  const isRecipientActive = recipientSnapshot?.docs?.[0]?.data()?.chatWith === user.email
+
+  useEffect(async () => {
+    if (!isRecipientActive || document.visibilityState === 'hidden') return
+
+    messagesSnapshot?.docs
+      .filter((message) => !message.data().isRead)
+      .forEach(async (message) => {
+        await messagesRef.doc(message.id).set({ isRead: true }, { merge: true })
+      })
+  }, [messagesSnapshot, recipientSnapshot])
 
   const [input, setInput] = useState('')
 
@@ -58,9 +63,12 @@ const ChatScreen = ({ chat, messages, onMobile }) => {
   function scrollToBottom(behavior = 'auto') {
     endOfMessageRef.current.scrollIntoView({
       behavior: behavior,
-      block: 'start',
     })
   }
+
+  useEffect(() => {
+    scrollToBottom()
+  }, [recipientSnapshot])
 
   useEffect(() => {
     scrollToBottom('smooth')
@@ -82,6 +90,7 @@ const ChatScreen = ({ chat, messages, onMobile }) => {
       message: input,
       user: user.email,
       photoURL: user.photoURL,
+      isRead: false,
     })
 
     setInput('')
@@ -102,7 +111,10 @@ const ChatScreen = ({ chat, messages, onMobile }) => {
         )}
         {recipient ? <Avatar src={recipient?.photoURL} /> : <Avatar>{recipientEmail[0]}</Avatar>}
         <HeaderInformation>
-          <h3>{recipient?.displayName || recipientEmail}</h3>
+          <h3>
+            {recipient?.displayName || recipientEmail}
+            {isRecipientActive && <span></span>}
+          </h3>
           {recipientSnapshot ? (
             <p>
               Last active:{' '}
@@ -183,9 +195,20 @@ const HeaderInformation = styled.div`
   > h3 {
     margin: 0;
     margin-bottom: 3px;
+    display: flex;
+    align-items: center;
 
     @media (max-width: 500px) {
       font-size: clamp(13px, 3vw, 16px);
+    }
+
+    > span {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: green;
+      margin-left: 5px;
     }
   }
 
